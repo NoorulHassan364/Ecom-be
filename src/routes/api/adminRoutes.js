@@ -14,4 +14,9 @@ Router.patch(
 Router.get("/product/:id", adminController.getProduct);
 Router.get("/product", adminController.getProductsByCategory);
 
+Router.post("/category", adminController.addCategory);
+Router.get("/category", adminController.getCategories);
+Router.delete("/category/:id", adminController.deleteCategory);
+Router.patch("/category/:id", adminController.updateCategory);
+
 module.exports = Router;
