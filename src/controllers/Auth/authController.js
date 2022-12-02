@@ -56,6 +56,67 @@ class Auth {
       console.log(error);
     }
   };
+
+  getUser = async (req, res) => {
+    try {
+      const resUser = await User.findById(req.params.id);
+      return res.status(200).json({
+        status: "success",
+        data: resUser,
+        // message: "deposit Successfully!",
+      });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({
+        status: "error",
+        message: "server error",
+      });
+    }
+  };
+
+  updateUser = async (req, res) => {
+    try {
+      const resUser = await User.findByIdAndUpdate(req.params.id, req.body);
+      return res.status(200).json({
+        status: "success",
+        data: resUser,
+        // message: "deposit Successfully!",
+      });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({
+        status: "error",
+        message: "server error",
+      });
+    }
+  };
+
+  changePassword = async (req, res) => {
+    try {
+      let user = await User.findById(req.params.id);
+      if (await user.correctPassword(req.body.oldPassword, user.password)) {
+        let pass = await bcrypt.hash(req.body.newPassword, 10);
+        const resUser = await User.findByIdAndUpdate(req.params.id, {
+          password: pass,
+        });
+        return res.status(200).json({
+          status: "success",
+          data: resUser,
+        });
+      } else {
+        return res.status(400).json({
+          status: "fail",
+          message: "Your Old Password is Incorrect!",
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({
+        status: "error",
+        message: "server error",
+      });
+    }
+  };
 }
 
 module.exports = new Auth();
