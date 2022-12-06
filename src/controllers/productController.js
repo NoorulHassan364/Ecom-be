@@ -3,6 +3,21 @@ const productModel = require("../models/productModel");
 const bookingModal = require("../models/bookingModal");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
+exports.getBookings = async (req, res) => {
+  try {
+    let bookings = await bookingModal
+      .find({ user: req.params.id })
+      .populate({ path: "prod" });
+    res.status(201).json({
+      status: "success",
+      data: bookings,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(400).send(error.message);
+  }
+};
+
 exports.getCheckOutSession = async (req, res, next) => {
   try {
     console.log("req", req.body);
@@ -39,8 +54,8 @@ exports.getCheckOutSession = async (req, res, next) => {
         },
       ],
       mode: "payment",
-      success_url: `${process.env.SUCCESS_PAYMENT_URL}/products`,
-      cancel_url: `${process.env.CANCEL_PAYMENT_URL}/cartIems`,
+      success_url: `${process.env.SUCCESS_PAYMENT_URL}/bookings`,
+      cancel_url: `${process.env.CANCEL_PAYMENT_URL}/products`,
       customer_email: user?.email,
       client_reference_id: url,
     });
