@@ -12,7 +12,7 @@ exports.sendForgotPasswordCode = async (user, req, res) => {
       templateId: process.env.VERIFY_ACCOUNT_TEMPLATE_ID,
       dynamic_template_data: {
         subject: "Online Shop Forgot Password Request",
-        link: `http://localhost:3000/forgotPassword/${user?._id}`,
+        link: `${process.env.SUCCESS_PAYMENT_URL}/forgotPassword/${user?._id}`,
         for: "Forgot Password",
       },
     };
