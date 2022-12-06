@@ -1,5 +1,6 @@
 const userModel = require("../models/user");
 const productModel = require("../models/productModel");
+const bookingModal = require("../models/bookingModal");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 exports.getCheckOutSession = async (req, res, next) => {
@@ -58,44 +59,16 @@ exports.getCheckOutSession = async (req, res, next) => {
 
 const createCheckoutBooking = async (session) => {
   let splitRefId = session.client_reference_id.split("|");
-  console.log("splitRefId", splitRefId);
-  //   let user = await UserModel.findOne({ email: session.customer_email });
-  //   if (splitRefId[1] == "shop") {
-  //     let shopId = splitRefId[0];
-  //     let shop = await shopModel.findByIdAndUpdate(shopId);
-
-  //     let date = new Date();
-
-  //     let lastRec = await shopPayments
-  //       .find({ user: user?._id, IsPayed: true })
-  //       .sort({ payedDate: -1 });
-  //     if (lastRec?.length == 0) {
-  //       lastRec = 1;
-  //     } else {
-  //       lastRec = parseInt(lastRec[0]?.invoiceNo) + 1;
-  //     }
-
-  //     await shopPayments.create({
-  //       paymentName:
-  //         splitRefId[2] === "buy"
-  //           ? `${shop?.name} (Bought)`
-  //           : `${shop?.name} (20%)`,
-  //       IsPayed: true,
-  //       payedDate: date,
-  //       amount:
-  //         splitRefId[2] === "buy"
-  //           ? shop?.price
-  //           : Math.round((parseInt(shop?.price) / 100) * 20),
-  //       dueDate: `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`,
-  //       user: user,
-  //       shop: shop?._id,
-  //       invoiceNo: lastRec,
-  //     });
-
-  //     // await UserModel.findByIdAndUpdate(user?._id, {
-  //     //   $push: { purchases: shopId },
-  //     // });
-  //   }
+  console.log("splitRefId.length-1", splitRefId[splitRefId.length - 1]);
+  let user = await userModel.findOne({ email: session.customer_email });
+  for (let i = 0; i < splitRefId.length - 1; i++) {
+    let sp = splitRefId[i].split("-");
+    await bookingModal.create({
+      prod: sp[0],
+      quantity: sp[1],
+      user: user?._id,
+    });
+  }
 };
 
 exports.webhookCheckout = (req, res, next) => {
