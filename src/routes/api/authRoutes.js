@@ -7,5 +7,6 @@ Router.post("/login", authController.LogIn);
 Router.get("/getUser/:id", authController.getUser);
 Router.patch("/updateUser/:id", authController.updateUser);
 Router.patch("/changePassword/:id", authController.changePassword);
+Router.post("/forgotPassword", authController.sendCode);
 
 module.exports = Router;

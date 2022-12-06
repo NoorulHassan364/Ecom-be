@@ -1,6 +1,7 @@
 const User = require("../../models/user");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+const EmailHelpers = require("../../utils/emails");
 
 class Auth {
   signup = async (req, res) => {
@@ -76,6 +77,9 @@ class Auth {
 
   updateUser = async (req, res) => {
     try {
+      if (req.body.password) {
+        req.body.password = await bcrypt.hash(req.body.password, 10);
+      }
       const resUser = await User.findByIdAndUpdate(req.params.id, req.body);
       return res.status(200).json({
         status: "success",
@@ -117,6 +121,22 @@ class Auth {
       });
     }
   };
+
+  async sendCode(req, res) {
+    try {
+      console.log("inside");
+      const { email } = req.body;
+      const user = await User.findOne({ email });
+      if (!user)
+        return res.status(401).json({
+          message: "Invalid Email",
+        });
+      await EmailHelpers.sendForgotPasswordCode(user, req, res);
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: error.message });
+    }
+  }
 }
 
 module.exports = new Auth();

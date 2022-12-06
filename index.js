@@ -3,12 +3,18 @@ const express = require("express");
 const cors = require("cors");
 require("dotenv").config({ path: `${__dirname}/../.env` });
 // dotenv.config({ path: "./config.env" });
+const productController = require("./src/controllers/productController");
 
 const app = express();
 require("./src/db/connection");
 const routes = require("./src/routes");
 
 app.use(cors());
+app.use(
+  "/webhook-checkout",
+  express.raw({ type: "application/json" }),
+  productController.webhookCheckout
+);
 
 app.use(express.json({ limit: "25mb" }));
 
