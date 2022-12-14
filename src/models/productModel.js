@@ -20,6 +20,15 @@ const productSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  addedDate: {
+    type: String,
+  },
+  moreImages: [
+    {
+      type: String,
+      required: false,
+    },
+  ],
   reviews: [
     {
       type: String,

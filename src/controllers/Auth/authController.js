@@ -6,6 +6,27 @@ const EmailHelpers = require("../../utils/emails");
 class Auth {
   signup = async (req, res) => {
     try {
+      var weekdays = [
+        "Sunday",
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+      ];
+      var d = new Date();
+      var dayName = weekdays[d.getDay()];
+      console.log("dayName", dayName);
+
+      let currentDate = new Date();
+      let currentYear = currentDate.getFullYear();
+      let startDate = new Date(currentDate.getFullYear(), 0, 1);
+      let days = Math.floor((currentDate - startDate) / (24 * 60 * 60 * 1000));
+      let weekNumber = Math.ceil(days / 7);
+      console.log("week", weekNumber);
+
+      req.body.joiningDay = `${dayName}-${weekNumber}`;
       const data = await User.create(req.body);
 
       res.status(201).json({
