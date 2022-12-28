@@ -1,6 +1,7 @@
 const productModel = require("../models/productModel");
 const Category = require("../models/category");
 const UserModal = require("../models/user");
+const bookingModal = require("../models/bookingModal");
 
 exports.addProduct = async (req, res) => {
   try {
@@ -246,7 +247,7 @@ exports.productAnalytics = async (req, res) => {
     let productWithDates = [];
     for (let i = 0; i < weekdays.length; i++) {
       let addedDate = `${weekdays[i]}-${weekNumber}`;
-      let cat = await productModel.find({ addedDate });
+      let cat = await bookingModal.find({ addedDate });
       productWithDates.push(cat?.length);
     }
     console.log("productWithDates", productWithDates);

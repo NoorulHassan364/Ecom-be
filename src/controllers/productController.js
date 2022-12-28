@@ -76,12 +76,30 @@ const createCheckoutBooking = async (session) => {
   let splitRefId = session.client_reference_id.split("|");
   console.log("splitRefId.length-1", splitRefId[splitRefId.length - 1]);
   let user = await userModel.findOne({ email: session.customer_email });
+  var weekdays = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
+  var d = new Date();
+  var dayName = weekdays[d.getDay()];
+
+  let currentDate = new Date();
+  let currentYear = currentDate.getFullYear();
+  let startDate = new Date(currentDate.getFullYear(), 0, 1);
+  let days = Math.floor((currentDate - startDate) / (24 * 60 * 60 * 1000));
+  let weekNumber = Math.ceil(days / 7);
   for (let i = 0; i < splitRefId.length - 1; i++) {
     let sp = splitRefId[i].split("-");
     await bookingModal.create({
       prod: sp[0],
       quantity: sp[1],
       user: user?._id,
+      addedDate: `${dayName}-${weekNumber}`,
     });
   }
 };
