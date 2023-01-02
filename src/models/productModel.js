@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+// creating product schema to store all the products
 const productSchema = new mongoose.Schema({
   name: {
     type: String,

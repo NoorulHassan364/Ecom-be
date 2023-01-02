@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
+// making booking schema to store user products history
 const bookingSchema = new mongoose.Schema({
+  // declaring all the attributes and their types for the schema
   prod: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Product",

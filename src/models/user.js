@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
+// requiring the bcrypt package to encrypt the password
 const bcrypt = require("bcryptjs");
-
+// making user schema and defining the their fields with types
 const userSchema = new mongoose.Schema({
   firstName: {
     type: String,
@@ -35,7 +36,7 @@ const userSchema = new mongoose.Schema({
   updated_at: { type: Date, default: Date.now },
 });
 
-// hashing password
+// // encrpting the  password before saving the user to the db.
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
   this.password = await bcrypt.hash(this.password, 10);
@@ -43,7 +44,7 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-// bcrypt compare password
+// // function to compare password when user will be logged in. it will return true and false.
 userSchema.methods.correctPassword = async function (userPassword, password) {
   return await bcrypt.compare(userPassword, password);
 };

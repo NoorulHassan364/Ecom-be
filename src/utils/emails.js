@@ -1,8 +1,10 @@
+// importing sendGrid to send email
 const sgMail = require("@sendgrid/mail");
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-
+// senfing mail when user will click on forgot password
 exports.sendForgotPasswordCode = async (user, req, res) => {
   try {
+    // creating email setup and forgot password link
     const msg = {
       to: user.email,
       from: {
@@ -16,6 +18,7 @@ exports.sendForgotPasswordCode = async (user, req, res) => {
         for: "Forgot Password",
       },
     };
+    // sending mail to the frontend
     await sgMail.send(msg);
     res.status(200).json({ messagse: "Email Sent" });
   } catch (err) {
