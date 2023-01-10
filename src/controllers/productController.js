@@ -115,6 +115,8 @@ const createCheckoutBooking = async (session) => {
       addedDate: `${dayName}-${weekNumber}`,
     });
   }
+  let prod = await productModel.findById(sp[0]);
+  await productModel.findByIdAndUpdate({ stock: prod.stock - 1 });
 };
 // function will run when user will click procced to checkout button in the cart page
 exports.webhookCheckout = (req, res, next) => {
